@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "neural-network-definitions.hpp"
+#include "math-definitions.hpp"
 
 //
 

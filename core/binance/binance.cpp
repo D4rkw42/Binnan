@@ -10,6 +10,9 @@
 using namespace std;
 using namespace nlohmann;
 
+std::string api_url;
+user_data user;
+
 void binance::init(void) {
     ifstream config_file("./config.json");
     json config;
@@ -34,6 +37,24 @@ void binance::init(void) {
 }
 
 //
+
+std::vector<std::string> binance::getExchangeList(void) {
+    cpr::Response response = cpr::Get(cpr::Url {api_url + "/exchangeInfo"});
+
+    if (response.status_code == 200) {
+        json res = json::parse(response.text);
+        std::vector<std::string> list;
+
+        json exchange_list = res["symbols"];
+
+        for (auto i_list = exchange_list.begin(); i_list < exchange_list.end(); ++i_list) {
+            json lst = *i_list;
+            list.push_back(lst["symbol"]);
+        }
+
+        return list;
+    }
+}
 
 exchange_info binance::getExchangeInfo(std::string symbol) {
     cpr::Response response = cpr::Get(

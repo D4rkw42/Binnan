@@ -40,8 +40,8 @@ typedef struct {
 
 //
 
-static std::string api_url;
-static user_data user;
+extern std::string api_url;
+extern user_data user;
 
 //
 
@@ -52,6 +52,7 @@ namespace binance {
 
     // get spots
 
+    std::vector<std::string> getExchangeList(void);
     exchange_info getExchangeInfo(std::string symbol);
     std::vector<candle> getCandlesticks(std::string symbol, CANDLE_INTERVAL interval);
 

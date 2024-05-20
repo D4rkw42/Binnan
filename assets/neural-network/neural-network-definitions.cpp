@@ -1,6 +1,7 @@
 #include "neural-network-definitions.hpp"
 
 #include <fstream>
+#include <filesystem>
 
 #include "assets/maths.hpp" // maths.hpp
 
@@ -90,6 +91,7 @@ std::shared_ptr<NeuralNetwork> loadNeuralNetwork(std::string nn_name) {
 void saveNeuralNetwork(std::string nn_name, std::shared_ptr<NeuralNetwork> neuralNetwork) {
   std::ofstream file;
 
+  std::filesystem::create_directories(NN_PATH);
   file.open(std::string(NN_PATH) + nn_name + ".dat");
 
   file << neuralNetwork->type << "\n";

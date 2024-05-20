@@ -7,15 +7,6 @@ include = c:/MinGW/include
 
 CFLAGS = -Wall -pedantic -pipe
 
-# headers
-
-curl-headers-dir = $(include)/curl/include
-
-cpr-headers-dir = $(include)/cpr/include
-cpr-headers = $(wildcard $(cpr-headers-dir)/cpr/*.h)
-
-json-headers-dir = $(include)/json/include
-
 # include
 
 include-dir = -I./ -I$(cpr-headers-dir) -I$(curl-headers-dir) -I$(json-headers-dir)
@@ -30,6 +21,18 @@ neural-network-source = $(wildcard $(neural-network-source-dir)/*.cpp)
 
 binance-source-dir = core/binance
 binance-source = $(wildcard $(binance-source-dir)/*.cpp)
+
+# headers
+
+curl-headers-dir = $(include)/curl/include
+
+cpr-headers-dir = $(include)/cpr/include
+cpr-headers = $(wildcard $(cpr-headers-dir)/cpr/*.h)
+
+json-headers-dir = $(include)/json/include
+
+neural-network-headers = $(neural-network-source:.cpp=.hpp)
+binance-headers = $(binance-source:.cpp=.hpp)
 
 # objects
 
@@ -53,10 +56,10 @@ dev: start project-assets o/main.o
 	@ g++ $(objects) -o $(project-dev-name) -lcurl -L "lib" $(CFLAGS)
 	./$(project-dev-name)
 
-$(neural-network-obj): $(neural-network-source)
+$(neural-network-obj): $(neural-network-source) $(neural-network-headers)
 	@ g++ $(subst o/,$(neural-network-source-dir)/,$(@:.o=.cpp)) -o $@ -c $(include-dir) $(CFLAGS)
 
-$(binance-obj): $(binance-source)
+$(binance-obj): $(binance-source) $(binance-headers)
 	@ g++ $(subst o/,$(binance-source-dir)/,$(@:.o=.cpp)) -o $@ -c $(include-dir) $(CFLAGS)
 
 project-assets: $(neural-network-obj) $(binance-obj)

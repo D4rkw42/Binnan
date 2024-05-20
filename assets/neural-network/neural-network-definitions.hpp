@@ -9,7 +9,7 @@
 
 //
 
-static const char* NN_PATH = "assets/neural-networks/"; // localização das redes
+static const char* NN_PATH = "assets/nn/"; // localização das redes
 
 static const double MAX_RANDOM_BIAS = 2;
 static const double MAX_RANDOM_WEIGHT = 1.5;

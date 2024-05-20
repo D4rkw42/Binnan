@@ -9,7 +9,7 @@
 
 static const double LEAKY_RELU_CONSTANT = 100;
 
-//
+// for AI definitions
 
 inline double drandom(double min, double max) {
   --max;
