@@ -3,6 +3,10 @@ project-dev-name = Binnan-dev
 
 include = c:/MinGW/include
 
+# flags
+
+CFLAGS = -Wall -pedantic -pipe
+
 # headers
 
 curl-headers-dir = $(include)/curl/include
@@ -10,9 +14,11 @@ curl-headers-dir = $(include)/curl/include
 cpr-headers-dir = $(include)/cpr/include
 cpr-headers = $(wildcard $(cpr-headers-dir)/cpr/*.h)
 
+json-headers-dir = $(include)/json/include
+
 # include
 
-include-dir = -I./ -I$(cpr-headers-dir) -I$(curl-headers-dir)
+include-dir = -I./ -I$(cpr-headers-dir) -I$(curl-headers-dir) -I$(json-headers-dir)
 
 # source
 
@@ -22,6 +28,9 @@ cpr-source = $(wildcard $(cpr-source-dir)/*.cpp)
 neural-network-source-dir = assets/neural-network
 neural-network-source = $(wildcard $(neural-network-source-dir)/*.cpp)
 
+binance-source-dir = core/binance
+binance-source = $(wildcard $(binance-source-dir)/*.cpp)
+
 # objects
 
 objects = $(wildcard o/*.o)
@@ -29,6 +38,7 @@ objects = $(wildcard o/*.o)
 cpr-obj = $(subst $(cpr-source-dir),o,$(cpr-source:.cpp=.o))
 
 neural-network-obj = $(subst $(neural-network-source-dir),o,$(neural-network-source:.cpp=.o))
+binance-obj =  $(subst $(binance-source-dir),o,$(binance-source:.cpp=.o))
 
 # external libs
 
@@ -40,18 +50,21 @@ $(cpr-obj): $(cpr-source) $(cpr-headers)
 
 dev: start project-assets o/main.o
 	@ echo Building $(project-dev-name)...
-	@ g++ $(objects) -o $(project-dev-name) -lcurl -L "lib"
+	@ g++ $(objects) -o $(project-dev-name) -lcurl -L "lib" $(CFLAGS)
 	./$(project-dev-name)
 
 $(neural-network-obj): $(neural-network-source)
-	@ g++ $(subst o/,$(neural-network-source-dir)/,$(@:.o=.cpp)) -o $@ -c $(include-dir)
+	@ g++ $(subst o/,$(neural-network-source-dir)/,$(@:.o=.cpp)) -o $@ -c $(include-dir) $(CFLAGS)
 
-project-assets: $(neural-network-obj)
+$(binance-obj): $(binance-source)
+	@ g++ $(subst o/,$(binance-source-dir)/,$(@:.o=.cpp)) -o $@ -c $(include-dir) $(CFLAGS)
+
+project-assets: $(neural-network-obj) $(binance-obj)
 	@ echo Project assets built!
 
 o/main.o: main.cpp $(cpr-obj)
 	@ echo Building main file...
-	@ g++ main.cpp -o o/main.o -c $(include-dir)
+	@ g++ main.cpp -o o/main.o -c $(include-dir) $(CFLAGS)
 
 start:
 	@ cls

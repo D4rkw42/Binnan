@@ -1,15 +1,13 @@
-#include <cpr/cpr.h>
 #include <iostream>
-#include <cstdlib>
+
+#include "core/binance/binance.hpp"
 
 int main(int argc, char** argv) {
-    cpr::Response r = cpr::Get(cpr::Url{"https://www.google.com/"},
-                      cpr::Authentication{"user", "pass", cpr::AuthMode::BASIC},
-                      cpr::Parameters{{"anon", "true"}, {"key", "value"}});
-    std::cout << "Obtendo dados de https://www.google.com/..." << "\n\n";
-    std::cout << "Status code: " << r.status_code << "\n\n";
-    std::cout << "Resposta: " << "\n\n";
-    std::cout << r.text << "\n";
-    system("pause");
+    binance::init();
+    std::vector<candle> candles = binance::getCandlesticks("BTCUSDT", _30M);
+
+    std::cout << candles[0].open << "\n";
+    std::cout << candles[0].close;
+
     return 0;
 }
