@@ -1,74 +1,75 @@
-project-name = Binnan
-project-dev-name = Binnan-dev
-
-include = c:/MinGW/include
-
-# flags
-
-CFLAGS = -Wall -pedantic -pipe
+PROJECT_NAME = binnan
+PROJECT_DEV_NAME = binnan-dev
 
 # include
 
-include-dir = -I./ -I$(cpr-headers-dir) -I$(curl-headers-dir) -I$(json-headers-dir)
+include = c:/MinGW/include
+
+INCLUDE_DIR = -I./ -I$(include)/curl/include -I$(include)/cpr/include -I$(include)/json/include
+
+# flags
+
+DLLS = -lcurl -L "lib"
 
 # source
 
-cpr-source-dir = $(include)/cpr/cpr
-cpr-source = $(wildcard $(cpr-source-dir)/*.cpp)
+CPR_SOURCE = $(wildcard $(include)/cpr/cpr/*.cpp)
 
-neural-network-source-dir = assets/neural-network
-neural-network-source = $(wildcard $(neural-network-source-dir)/*.cpp)
-
-binance-source-dir = core/binance
-binance-source = $(wildcard $(binance-source-dir)/*.cpp)
-
-# headers
-
-curl-headers-dir = $(include)/curl/include
-
-cpr-headers-dir = $(include)/cpr/include
-cpr-headers = $(wildcard $(cpr-headers-dir)/cpr/*.h)
-
-json-headers-dir = $(include)/json/include
-
-neural-network-headers = $(neural-network-source:.cpp=.hpp)
-binance-headers = $(binance-source:.cpp=.hpp)
+BINANCE_SOURCE = $(wildcard core/binance/*.cpp)
+ASSETS_SOURCE = $(wildcard assets/*.cpp)
+NEURAL_NETWORK_SOURCE = $(wildcard assets/neural-network/*.cpp)
 
 # objects
 
-objects = $(wildcard o/*.o)
+OBJECTS = $(wildcard o/*.o)
 
-cpr-obj = $(subst $(cpr-source-dir),o,$(cpr-source:.cpp=.o))
+CPR_OBJ = $(subst $(include)/cpr/cpr/,o/,$(CPR_SOURCE:.cpp=.o))
 
-neural-network-obj = $(subst $(neural-network-source-dir),o,$(neural-network-source:.cpp=.o))
-binance-obj =  $(subst $(binance-source-dir),o,$(binance-source:.cpp=.o))
+BINANCE_OBJ = $(subst core/binance/,o/,$(BINANCE_SOURCE:.cpp=.o))
+ASSETS_OBJ = $(subst assets/,o/,$(ASSETS_SOURCE:.cpp=.o))
+NEURAL_NETWORK_OBJ = $(subst assets/neural-network/,o/,$(NEURAL_NETWORK_SOURCE:.cpp=.o))
 
 # external libs
 
-$(cpr-obj): $(cpr-source) $(cpr-headers)
-	@ echo Building cpr lib...
-	@ g++ $(subst o/,$(cpr-source-dir)/,$(@:.o=.cpp)) -o $@ -c $(include-dir)
+o/%.o: $(include)/cpr/cpr/%.cpp
+	@ g++ $< -o $@ -c $(INCLUDE_DIR)
+
+EXTERNAL_LIBS: $(CPR_OBJ)
+	@ echo External libs built!
+
+# building
+
+o/%.o: core/binance/%.cpp core/binance/%.hpp
+	@ g++ $< -o $@ -c $(INCLUDE_DIR)
+
+o/%.o: assets/%.cpp assets/%.hpp
+	@ g++ $< -o $@ -c $(INCLUDE_DIR)
+
+o/%.o: assets/neural-network/%.cpp assets/neural-network/%.hpp
+	@ g++ $< -o $@ -c $(INCLUDE_DIR)
 
 # command options
 
-dev: start project-assets o/main.o
-	@ echo Building $(project-dev-name)...
-	@ g++ $(objects) -o $(project-dev-name) -lcurl -L "lib" $(CFLAGS)
-	./$(project-dev-name)
+dev: start $(PROJECT_DEV_NAME)
+all: start $(PROJECT_NAME)
 
-$(neural-network-obj): $(neural-network-source) $(neural-network-headers)
-	@ g++ $(subst o/,$(neural-network-source-dir)/,$(@:.o=.cpp)) -o $@ -c $(include-dir) $(CFLAGS)
+nn-build-warning:
+	@ echo Building required libs...
+nn-build: clear nn-build-warning EXTERNAL_LIBS $(BINANCE_OBJ) $(ASSETS_OBJ) $(NEURAL_NETWORK_OBJ)
+	@ cd nn-build && make all
 
-$(binance-obj): $(binance-source) $(binance-headers)
-	@ g++ $(subst o/,$(binance-source-dir)/,$(@:.o=.cpp)) -o $@ -c $(include-dir) $(CFLAGS)
-
-project-assets: $(neural-network-obj) $(binance-obj)
-	@ echo Project assets built!
-
-o/main.o: main.cpp $(cpr-obj)
+o/main.o: main.cpp
 	@ echo Building main file...
-	@ g++ main.cpp -o o/main.o -c $(include-dir) $(CFLAGS)
+	@ g++ main.cpp -o o/main.o -c $(INCLUDE_DIR)
 
-start:
+$(PROJECT_DEV_NAME): EXTERNAL_LIBS $(BINANCE_OBJ) $(ASSETS_OBJ) $(NEURAL_NETWORK_OBJ) o/main.o
+	@ echo Building $@...
+	@ g++ $(OBJECTS) -o $@ $(DLLS) -Wall -pedantic -pipe
+	@ echo $@ built!
+	./$@
+
+start: clear
+	@ echo Starting...
+
+clear:
 	@ cls
-	@ echo Starting building...

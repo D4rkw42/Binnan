@@ -64,11 +64,11 @@ inline double offset(std::vector<candle> candles, int period) {
 }
 
 inline std::vector<double> bollinger(std::vector<candle> candles) {
-    double offset = offset(candles, 20);
+    double off = offset(candles, 20);
     double averg = movingAverage(candles, 20);
 
-    double ub = averg + offset * 2;
-    double lb = averg - offset * 2;
+    double ub = averg + off * 2;
+    double lb = averg - off * 2;
 
     return std::vector {ub, lb};
 }
