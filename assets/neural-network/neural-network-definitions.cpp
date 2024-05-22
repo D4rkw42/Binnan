@@ -1,9 +1,9 @@
 #include "neural-network-definitions.hpp"
 
-#include <fstream>
-#include <filesystem>
+#include <iostream>
 
 #include "assets/maths.hpp" // maths.hpp
+#include "assets/utils.hpp"
 
 //
 
@@ -26,6 +26,10 @@ double Neuron::load(std::vector<double> values) {
 }
 
 //
+
+NeuralNetwork::NeuralNetwork(std::string _type) {
+  type = _type;
+}
 
 NeuralNetwork::NeuralNetwork(std::string _type, int _input_nr, int _output_nr, int _hidden_layers) {
   type = _type;
@@ -67,48 +71,4 @@ NeuralNetwork::NeuralNetwork(std::string _type, int _input_nr, int _output_nr, i
 
 std::vector<double> NeuralNetwork::load(std::vector<double> input) {
   return std::vector<double> {};
-}
-
-//
-
-std::shared_ptr<NeuralNetwork> loadNeuralNetwork(std::string nn_name) {
-  std::ifstream file;
-  std::string fileData;
-
-  std::shared_ptr<NeuralNetwork> nn = nullptr;
-
-  //
-  
-  file.open(std::string(NN_PATH) + nn_name + ".dat");
-  
-  file >> fileData;
-  
-  file.close();
-
-  return nn;
-}
-
-void saveNeuralNetwork(std::string nn_name, std::shared_ptr<NeuralNetwork> neuralNetwork) {
-  std::ofstream file;
-
-  std::filesystem::create_directories(NN_PATH);
-  file.open(std::string(NN_PATH) + nn_name + ".dat");
-
-  file << neuralNetwork->type << "\n";
-  
-  for (auto layer : neuralNetwork->layers) {
-    for (auto neuron : layer) {
-      file << neuron.bias << " ";
-      
-      for (double value : neuron.weights) {
-        file << value << " ";
-      }
-
-      file << "/\n";
-    }
-
-    file << "#\n";
-  }
-  
-  file.close();
 }

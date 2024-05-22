@@ -80,14 +80,17 @@ exchange_info binance::getExchangeInfo(std::string symbol) {
     }
 }
 
-std::vector<candle> binance::getCandlesticks(std::string symbol, CANDLE_INTERVAL interval) {
-    cpr::Response response = cpr::Get(
-        cpr::Url {api_url + "/klines"},
-        cpr::Parameters {
-            {"symbol", symbol},
-            {"interval", interval}
-        }
-    );
+std::vector<candle> binance::getCandlesticks(std::string symbol, CANDLE_INTERVAL interval, UTC* startTime) {
+    cpr::Parameters parameters = {
+        {"symbol", symbol},
+        {"interval", interval}
+    };
+
+    if (startTime != nullptr) {
+        parameters.Add(cpr::Parameter("startTime", to_string(startTime->value)));
+    }
+
+    cpr::Response response = cpr::Get(cpr::Url {api_url + "/klines"}, parameters);
 
     if (response.status_code == 200) {
         json res = json::parse(response.text);

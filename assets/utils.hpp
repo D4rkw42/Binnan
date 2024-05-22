@@ -1,12 +1,20 @@
-// funções de utilidade geral
+// funções/estruturas de utilidade geral
 
 #ifndef UTILS_H
 #define UTILS_H
 
+#include <vector>
 #include <string>
 
 // date related
 
-std::string UTCFormated(int day, int month, int year); // formata data para UTC
+class UTC { // utc date formated
+    public:
+        int value;
+        UTC(int day, int month, int year);
+
+};
+
+UTC* UTCFormated(int day, int month, int year);
 
 #endif

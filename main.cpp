@@ -1,12 +1,10 @@
 #include <iostream>
 
-#include "core/binance/binance.hpp"
 #include "assets/neural-network/neural-network.hpp"
-#include "assets/utils.hpp"
 
 int main(int argc, char** argv) {
-    binance::init();
-    std::cout << UTCFormated(24, 12, 2024);
+    auto nn = loadNeuralNetwork("nn1");
+    std::cout << nn->type << "\n";
 
     return 0;
 }

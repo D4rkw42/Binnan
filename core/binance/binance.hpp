@@ -8,6 +8,8 @@
 
 #include <nlohmann/json.hpp>
 
+#include "assets/utils.hpp"
+
 typedef struct {
     std::string api_key;
     std::string secret_key;
@@ -25,11 +27,11 @@ typedef struct {
 
 typedef const std::string CANDLE_INTERVAL;
 
-static CANDLE_INTERVAL _3M = "3m"; // 3 minutes
-static CANDLE_INTERVAL _5M = "5m"; // 5 minutes
-static CANDLE_INTERVAL _15M = "15m"; // 15 minutes
-static CANDLE_INTERVAL _30M = "30m"; // 30 minutes
-static CANDLE_INTERVAL _1H = "1h"; // 1 hour
+CANDLE_INTERVAL _3M = "3m"; // 3 minutes
+CANDLE_INTERVAL _5M = "5m"; // 5 minutes
+CANDLE_INTERVAL _15M = "15m"; // 15 minutes
+CANDLE_INTERVAL _30M = "30m"; // 30 minutes
+CANDLE_INTERVAL _1H = "1h"; // 1 hour
 
 
 typedef struct {
@@ -54,7 +56,7 @@ namespace binance {
 
     std::vector<std::string> getExchangeList(void);
     exchange_info getExchangeInfo(std::string symbol);
-    std::vector<candle> getCandlesticks(std::string symbol, CANDLE_INTERVAL interval);
+    std::vector<candle> getCandlesticks(std::string symbol, CANDLE_INTERVAL interval, UTC* startTime = nullptr);
 
     // post spots
 
