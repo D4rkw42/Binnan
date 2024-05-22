@@ -1,0 +1,18 @@
+{
+    "using-testnet": true,
+
+    "api": {
+        "url": "https://api.binance.com/api/v3",
+        "testnet": {"url": "https://testnet.binance.vision/api/v3"}
+    },
+
+    "user": {
+        "api-key": "",
+        "secret-key": "",
+
+        "testnet": {
+            "api-key": "a8sIo0IDsAietPKaXCc0E7s9QD6UVEanLVjklMEe7mcapgFg0h5Hs1DvLKwGoCcC",
+            "secret-key": "hQYraGSP3uysaBpzbH3Ye8RWfqE4enC0zSiCLnMyOSDgE6TyQ8eJ8Axjzu5APVI3"
+        }
+    }
+}
