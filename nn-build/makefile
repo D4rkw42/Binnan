@@ -1,9 +1,9 @@
-PROJECT_NAME = nn_build
+PROJECT_NAME = nn-build
 
 # include
 
 include = c:/MinGW/include
-INCLUDE_DIR = -I./ -I../assets -I../core/binance -I../assets/neural-network -I$(include)/json/include
+INCLUDE_DIR = -I./ -I../ -I$(include)/curl/include -I$(include)/cpr/include -I$(include)/json/include -I$(include)/random/include
 
 # flags
 
@@ -29,7 +29,7 @@ OBJECTS = $(subst ./,o/,$(SOURCE:.cpp=.o)) $(CPR_OBJ) $(BINANCE_OBJ) $(ASSETS_OB
 # build
 
 o/%.o: %.cpp
-	g++ $< -o $@ -c $(INCLUDE_DIR)
+	@ g++ $< -o $@ -c $(INCLUDE_DIR)
 
 # command options
 
@@ -37,8 +37,8 @@ all: start $(PROJECT_NAME)
 
 $(PROJECT_NAME): $(OBJECTS)
 	@ echo Building $@...
-	@ g++ $^ -o ../$(PROJECT_NAME) $(DLLS) -O2 -pipe
-	@ ./../$@
+	@ g++ $^ -o ../$@ $(DLLS) -O2 -pipe
+	@ echo Run $@ to continue.
 
 start:
 	@ echo Now building nn-build tool (for neural-network training)...

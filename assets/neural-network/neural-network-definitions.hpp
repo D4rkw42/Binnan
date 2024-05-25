@@ -9,10 +9,10 @@
 
 //
 
-static const char* NN_PATH = "assets/nn/"; // localização das redes
+extern const char* NN_PATH; // localização das redes
 
-static const double MAX_RANDOM_BIAS = 2;
-static const double MAX_RANDOM_WEIGHT = 1.5;
+extern const double MAX_RANDOM_BIAS;
+extern const double MAX_RANDOM_WEIGHT;
 
 //
 
@@ -40,6 +40,7 @@ class NeuralNetwork {
     virtual ~NeuralNetwork() {};
 
     virtual std::vector<double> load(std::vector<double> input);
+    virtual std::shared_ptr<NeuralNetwork> copy(void);
 
 };
 

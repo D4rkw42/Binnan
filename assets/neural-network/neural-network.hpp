@@ -8,6 +8,10 @@
 
 #include "neural-network-definitions.hpp"
 
+// variação máxima para aleatorização
+extern const int BIAS_VARIATION;
+extern const int WEIGHT_VARIATION;
+
 //
 
 // IA para operação básica de perído curto/longo
@@ -17,6 +21,7 @@ class NN_Regular : public NeuralNetwork {
     NN_Regular(void): NeuralNetwork("NNRegular") {}; // for empty nn
 
     std::vector<double> load(std::vector<double> input);
+    std::shared_ptr<NeuralNetwork> copy(void);
 
 };
 
@@ -27,6 +32,7 @@ class NN_FuturePrice : public NeuralNetwork {
     NN_FuturePrice(void): NeuralNetwork("NNFuturePrice") {};
     
     std::vector<double> load(std::vector<double> input);
+    std::shared_ptr<NeuralNetwork> copy(void);
 
 };
 
@@ -47,5 +53,7 @@ std::shared_ptr<NeuralNetwork> createBlankNeuralNetwork(void) {
 std::shared_ptr<NeuralNetwork> loadNeuralNetwork(std::string nn_name);
 
 void saveNeuralNetwork(std::string nn_name, std::shared_ptr<NeuralNetwork> neuralNetwork);
+
+void messNeuralNetwork(std::shared_ptr<NeuralNetwork> nn); // modifica os pesos aleatoriamente
 
 #endif

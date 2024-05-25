@@ -14,7 +14,7 @@
 
 typedef struct { // retornado pela função de input para treino
     std::vector<double> input;
-    candle nextCandle;
+    int currCandle;
 } NNInputTrainData;
 
 //
@@ -31,6 +31,6 @@ typedef struct { // retornado pela função de input para treino
 std::vector<double> makeNNInput(std::string symbol, CANDLE_INTERVAL interval, UTC* startTime = nullptr);
 
 // para treinamento
-NNInputTrainData makeNNInput(std::string symbol, CANDLE_INTERVAL interval, int cicle, UTC* startTime = nullptr);
+NNInputTrainData makeNNInput(std::vector<candle> candles, int cicle);
 
 #endif

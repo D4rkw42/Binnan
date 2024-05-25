@@ -11,8 +11,26 @@
         "secret-key": "",
 
         "testnet": {
-            "api-key": "a8sIo0IDsAietPKaXCc0E7s9QD6UVEanLVjklMEe7mcapgFg0h5Hs1DvLKwGoCcC",
-            "secret-key": "hQYraGSP3uysaBpzbH3Ye8RWfqE4enC0zSiCLnMyOSDgE6TyQ8eJ8Axjzu5APVI3"
+            "api-key": "Gu4shcwbHqmUtzTJgrbkdcusMtBWpeYA7TN45Sw8y6xS4nANnNd3KmKMHEviDICn",
+            "secret-key": "dIYDAPIQVfy5KBuqszGon7OGbTRROsUuniCBtZa1FKNYv3GYJH2XD8xDvPGFYePF"
+        }
+    },
+
+    "nn": {
+        "regular": {
+            "input": 38,
+            "output": 1,
+            "hidden-layers": 4,
+            
+            "types": {
+                "short": {"candle-time": "_3M", "operation-time": 9},
+                "long": {"candle-time": "_30M", "operation-time": 60}
+            }
+        },
+        "future": {
+            "input": 38,
+            "output": 2,
+            "hidden-layers": 8
         }
     }
 }

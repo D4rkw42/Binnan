@@ -11,7 +11,11 @@
 class UTC { // utc date formated
     public:
         int value;
+        int day, month, year;
         UTC(int day, int month, int year);
+
+        void advance(int days);
+        std::string print(void);
 
 };
 

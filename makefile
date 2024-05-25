@@ -5,7 +5,7 @@ PROJECT_DEV_NAME = binnan-dev
 
 include = c:/MinGW/include
 
-INCLUDE_DIR = -I./ -I$(include)/curl/include -I$(include)/cpr/include -I$(include)/json/include
+INCLUDE_DIR = -I./ -I$(include)/curl/include -I$(include)/cpr/include -I$(include)/json/include -I$(include)/random/include
 
 # flags
 
@@ -64,6 +64,7 @@ o/main.o: main.cpp
 
 $(PROJECT_DEV_NAME): EXTERNAL_LIBS $(BINANCE_OBJ) $(ASSETS_OBJ) $(NEURAL_NETWORK_OBJ) o/main.o
 	@ echo Building $@...
+	@ del $(PROJECT_DEV_NAME).exe
 	@ g++ $(OBJECTS) -o $@ $(DLLS) -Wall -pedantic -pipe
 	@ echo $@ built!
 	./$@

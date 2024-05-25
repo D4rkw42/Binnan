@@ -6,6 +6,9 @@
 
 #include "assets/maths.hpp"
 
+const int BIAS_VARIATION = 10;
+const int WEIGHT_VARIATION = 10;
+
 //
 
 std::vector<double> NN_Regular::load(std::vector<double> input) {
@@ -68,6 +71,20 @@ std::vector<double> NN_FuturePrice::load(std::vector<double> input) {
 
 //
 
+std::shared_ptr<NeuralNetwork> NN_Regular::copy(void) {
+  std::shared_ptr<NeuralNetwork> base = createBlankNeuralNetwork<NN_Regular>();
+  base->layers = this->layers;
+  return base;
+}
+
+std::shared_ptr<NeuralNetwork> NN_FuturePrice::copy(void) {
+  std::shared_ptr<NeuralNetwork> base = createBlankNeuralNetwork<NN_FuturePrice>();
+  base->layers = this->layers;
+  return base;
+}
+
+//
+
 std::shared_ptr<NeuralNetwork> loadNeuralNetwork(std::string nn_name) {
   std::ifstream file;
   std::string file_line;
@@ -81,30 +98,56 @@ std::shared_ptr<NeuralNetwork> loadNeuralNetwork(std::string nn_name) {
   //
 
   std::string nn_type;
-  file >> nn_type;
 
-  if (nn_type == "NNRegular") {
-    nn = createBlankNeuralNetwork<NN_Regular>();
-  } else if (nn_type == "NNFuturePrice") {
-    nn = createBlankNeuralNetwork<NN_FuturePrice>();
-  }
+  int l_id = 0;
+
+  std::vector<Neuron> currLayer;
 
   while (getline(file, file_line)) {
     std::vector<std::string> data; // a informação contida em cada linha
-    std::string info;
+    std::string info = "";
     
+    if (l_id++ == 0) { // definição do tipo da rede neural
+      if (file_line == "NNRegular") {
+        nn = createBlankNeuralNetwork<NN_Regular>();
+      } else if (file_line == "NNFuturePrice") {
+        nn = createBlankNeuralNetwork<NN_FuturePrice>();
+      }
+
+      continue;
+    }
+
     for (char c : file_line) {
-      if (to_string(c) == " ") {
+      if (c == ' ') {
         data.push_back(info);
         info = "";
 
         continue;
       }
 
-      info+= to_string(c);
+      info += c;
     }
 
-    // adicionar as informações na rede neural
+    // atribuição de dados
+
+    if (data[0] == "#") { // nova camada
+      nn->layers.push_back(currLayer);
+      currLayer.clear();
+    } else { // atribuição de neurônios na mesma camada
+      Neuron neuron(data.size() - 1);
+
+      for (int i = 0; i < data.size(); ++i) {
+        double value = std::stod(data[i]);
+
+        if (i == 0) {
+          neuron.bias = value;
+        } else {
+          neuron.weights[i - 1] = value;
+        }
+      }
+
+      currLayer.push_back(neuron);
+    }
   }
 
   //
@@ -130,11 +173,25 @@ void saveNeuralNetwork(std::string nn_name, std::shared_ptr<NeuralNetwork> neura
         file << value << " ";
       }
 
-      file << "/\n";
+      file << "\n";
     }
 
-    file << "#\n";
+    file << "# \n";
   }
   
   file.close();
+}
+
+void messNeuralNetwork(std::shared_ptr<NeuralNetwork> nn) {
+  for (int layer = 0; layer < nn->layers.size(); ++layer) {
+    for (int neuron = 0; neuron < nn->layers[layer].size(); ++neuron) {
+      double bias_mod = random::get<double>(-BIAS_VARIATION, BIAS_VARIATION);
+      nn->layers[layer][neuron].bias += bias_mod;
+      
+      for (int weight = 0; weight < nn->layers[layer][neuron].weights.size(); ++weight) {
+        double weight_mod = random::get<double>(-WEIGHT_VARIATION, WEIGHT_VARIATION);
+        nn->layers[layer][neuron].weights[weight] += weight_mod;
+      }
+    }
+  }
 }

@@ -25,13 +25,21 @@ typedef struct {
 
 // candle intervals
 
-typedef const std::string CANDLE_INTERVAL;
+typedef std::string CANDLE_INTERVAL;
 
-CANDLE_INTERVAL _3M = "3m"; // 3 minutes
-CANDLE_INTERVAL _5M = "5m"; // 5 minutes
-CANDLE_INTERVAL _15M = "15m"; // 15 minutes
-CANDLE_INTERVAL _30M = "30m"; // 30 minutes
-CANDLE_INTERVAL _1H = "1h"; // 1 hour
+extern CANDLE_INTERVAL _3M; // 3 minutes
+extern CANDLE_INTERVAL _5M; // 5 minutes
+extern CANDLE_INTERVAL _15M; // 15 minutes
+extern CANDLE_INTERVAL _30M; // 30 minutes
+extern CANDLE_INTERVAL _1H; // 1 hour
+
+typedef struct {
+    CANDLE_INTERVAL interval;
+    int value;
+    CANDLE_INTERVAL* var;
+} CANDLE_INTERVAL_ENUM;
+
+extern std::vector<CANDLE_INTERVAL_ENUM> CANDLE_INTERVAL_ENUMS; // equivalente dos enums em número
 
 
 typedef struct {

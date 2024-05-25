@@ -14,11 +14,8 @@ std::vector<double> makeNNInput(std::string symbol, CANDLE_INTERVAL interval, UT
     return input;
 }
 
-NNInputTrainData makeNNInput(std::string symbol, CANDLE_INTERVAL interval, int cicle, UTC* startTime) {
+NNInputTrainData makeNNInput(std::vector<candle> candles, int cicle) {
     std::vector<double> input;
-    candle nextCandle;
-
-    auto candles = binance::getCandlesticks(symbol, interval, startTime);
 
     // seleção de candles para treinamento
 
@@ -76,7 +73,5 @@ NNInputTrainData makeNNInput(std::string symbol, CANDLE_INTERVAL interval, int c
 
     //
 
-    nextCandle = candles[candles.size() + candleSelectionNum - 1];
-
-    return NNInputTrainData {input, nextCandle};
+    return NNInputTrainData {input, init};
 }

@@ -5,13 +5,18 @@
 #include "assets/maths.hpp" // maths.hpp
 #include "assets/utils.hpp"
 
+const char* NN_PATH = "assets/nn/"; // localização das redes
+
+const double MAX_RANDOM_BIAS = 2;
+const double MAX_RANDOM_WEIGHT = 1.5;
+
 //
 
 Neuron::Neuron(int _weights) {
-  bias = drandom(-MAX_RANDOM_BIAS, MAX_RANDOM_BIAS);
+  bias = random::get<double>(-MAX_RANDOM_BIAS, MAX_RANDOM_BIAS);
 
   for (int w = 0; w < _weights; ++w) {
-    weights.push_back(drandom(-MAX_RANDOM_WEIGHT, MAX_RANDOM_WEIGHT));
+    weights.push_back(random::get<double>(-MAX_RANDOM_WEIGHT, MAX_RANDOM_WEIGHT));
   }
 }
 
@@ -70,5 +75,9 @@ NeuralNetwork::NeuralNetwork(std::string _type, int _input_nr, int _output_nr, i
 }
 
 std::vector<double> NeuralNetwork::load(std::vector<double> input) {
-  return std::vector<double> {};
+  return std::vector<double> {0};
+}
+
+std::shared_ptr<NeuralNetwork> NeuralNetwork::copy(void) {
+  return std::shared_ptr<NeuralNetwork>(this);
 }

@@ -2,8 +2,33 @@
 
 #include "utils.hpp"
 
-UTC::UTC(int day, int month, int year) {
+#include <iostream>
+
+UTC::UTC(int day, int month, int year) : day(day), month(month), year(year) {
     this->value = stod(std::to_string(year) + std::to_string(month) + std::to_string(day));
+}
+
+void UTC::advance(int days) {
+    day += days;
+
+    if (month == 2 && day > 28) {
+        day -= 28;
+        month++;
+    } else if (month != 2 && day > 30) {
+        day -= 30;
+        month++;
+    }
+
+    if (month > 12) {
+        month = 1;
+        year++;
+    }
+
+    this->value = stod(std::to_string(year) + std::to_string(month) + std::to_string(day));
+}
+
+std::string UTC::print(void) {
+    return std::to_string(day) + "/" + std::to_string(month) + "/" + std::to_string(year);
 }
 
 UTC* UTCFormated(int day, int month, int year) {

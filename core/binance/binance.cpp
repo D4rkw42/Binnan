@@ -10,6 +10,20 @@
 using namespace std;
 using namespace nlohmann;
 
+CANDLE_INTERVAL _3M = "3m"; // 3 minutes
+CANDLE_INTERVAL _5M = "5m"; // 5 minutes
+CANDLE_INTERVAL _15M = "15m"; // 15 minutes
+CANDLE_INTERVAL _30M = "30m"; // 30 minutes
+CANDLE_INTERVAL _1H = "1h"; // 1 hour
+
+std::vector<CANDLE_INTERVAL_ENUM> CANDLE_INTERVAL_ENUMS = {
+    {"_3M", 3, &_3M},
+    {"_5M", 5, &_5M},
+    {"_15M", 15, &_15M},
+    {"_30M", 30, &_30M},
+    {"_1H", 60, &_1H}
+};
+
 std::string api_url;
 user_data user;
 
@@ -110,5 +124,5 @@ std::vector<candle> binance::getCandlesticks(std::string symbol, CANDLE_INTERVAL
         }
 
         return candles;
-    }
+    };
 }
