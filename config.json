@@ -18,7 +18,7 @@
 
     "nn": {
         "regular": {
-            "input": 38,
+            "input": 25,
             "output": 1,
             "hidden-layers": 2,
             
@@ -28,7 +28,7 @@
             }
         },
         "future": {
-            "input": 38,
+            "input": 25,
             "output": 2,
             "hidden-layers": 4
         }

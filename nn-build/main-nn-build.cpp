@@ -85,11 +85,16 @@ std::shared_ptr<NeuralNetwork> crossOverAndMutation(std::shared_ptr<NeuralNetwor
 
     for (int layer = 0; layer < father->layers.size(); ++layer) {
         for (int neuron = 0; neuron < father->layers[layer].size(); ++neuron) {
-            bool crossOver = random::get<bool>();
+            for (int weight = 0; weight < father->layers[layer][neuron].weights.size(); ++weight) {
+                bool crossOver = random::get<bool>();
 
-            if (crossOver) {
+                if (crossOver) {
+                    copy->layers[layer][neuron].weights[weight] = mother->layers[layer][neuron].weights[weight];
+                }
+            }
+
+            if (random::get<bool>()) {
                 copy->layers[layer][neuron].bias = mother->layers[layer][neuron].bias;
-                copy->layers[layer][neuron].weights = mother->layers[layer][neuron].weights;
             }
         }
     }
@@ -164,14 +169,26 @@ void trainNeuralNetwork(std::string symbol, std::string nn_type, std::string tim
     sleep_for(seconds(5));
 
     std::shared_ptr<NeuralNetwork> father, mother;
-    father = nn;
-    mother = father;
+
+    bool firstRun = true;
 
     while (true) {
         neural_networks.clear();
 
-        for (int i = 0; i < numOfNN; ++i) {
-            neural_networks.push_back(NN_Trained(crossOverAndMutation(father, mother), max_score));
+        if (!firstRun) {
+            for (int i = 0; i < numOfNN; ++i) {
+                neural_networks.push_back(NN_Trained(crossOverAndMutation(father, mother), max_score));
+            }
+        } else {
+            firstRun = false;
+
+            neural_networks.push_back(NN_Trained(nn, max_score));
+
+            for (int i = 1; i < numOfNN; ++i) {
+                auto copy = nn->copy();
+                messNeuralNetwork(copy);
+                neural_networks.push_back(NN_Trained(copy, max_score));
+            }
         }
 
         // fase de testes

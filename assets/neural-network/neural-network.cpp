@@ -6,8 +6,8 @@
 
 #include "assets/maths.hpp"
 
-const int BIAS_VARIATION = 3;
-const int WEIGHT_VARIATION = 3;
+const int BIAS_VARIATION = 10;
+const int WEIGHT_VARIATION = 10;
 
 //
 

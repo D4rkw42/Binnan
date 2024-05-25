@@ -8,7 +8,7 @@
 const char* NN_PATH = "assets/nn/"; // localização das redes
 
 const double MAX_RANDOM_BIAS = 2;
-const double MAX_RANDOM_WEIGHT = 1.5;
+const double MAX_RANDOM_WEIGHT = 2;
 
 //
 
