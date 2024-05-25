@@ -37,7 +37,7 @@ all: start $(PROJECT_NAME)
 
 $(PROJECT_NAME): $(OBJECTS)
 	@ echo Building $@...
-	@ g++ $^ -o ../$@ $(DLLS) -O2 -pipe
+	@ g++ $^ -o ../$@ $(DLLS) -O3 -march=native -pipe
 	@ echo Run $@ to continue.
 
 start:

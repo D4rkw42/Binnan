@@ -61,21 +61,45 @@ double getGeneralAccuracy(std::vector<NN_Trained> nn_trained) {
     return sum / nn_trained.size();
 }
 
-//
+void findBestNeuralNetworks(std::vector<NN_Trained>& nn_trained) {
+    int mod = 0;
 
-std::vector<std::shared_ptr<NeuralNetwork>> messedNeuralNetworks(std::shared_ptr<NeuralNetwork> base, int amount) {
-    std::vector<std::shared_ptr<NeuralNetwork>> nns;
-    
-    for (int i = 0; i < amount; ++i) {
-        std::shared_ptr<NeuralNetwork> copy = base->copy();
+    do {
+        mod = 0;
 
-        messNeuralNetwork(copy);
+        for (int i = 0; i < nn_trained.size() - 1; ++i) {
+            if (nn_trained[i].accuracy() < nn_trained[i + 1].accuracy()) {
+                NN_Trained a = nn_trained[i];
+                NN_Trained b = nn_trained[i + 1];
+            
+                nn_trained[i] = b;
+                nn_trained[i + 1] = a;
+                mod++;
+            }
+        }
+    } while (mod != 0);
+}
 
-        nns.push_back(copy);
+std::shared_ptr<NeuralNetwork> crossOverAndMutation(std::shared_ptr<NeuralNetwork> father, std::shared_ptr<NeuralNetwork> mother) {
+    std::shared_ptr<NeuralNetwork> copy = father->copy();
+
+    for (int layer = 0; layer < father->layers.size(); ++layer) {
+        for (int neuron = 0; neuron < father->layers[layer].size(); ++neuron) {
+            bool crossOver = random::get<bool>();
+
+            if (crossOver) {
+                copy->layers[layer][neuron].bias = mother->layers[layer][neuron].bias;
+                copy->layers[layer][neuron].weights = mother->layers[layer][neuron].weights;
+            }
+        }
     }
 
-    return nns;
+    messNeuralNetwork(copy);
+
+    return copy;
 }
+
+//
 
 void trainNeuralNetwork(std::string symbol, std::string nn_type, std::string time_type, UTC* startTime) {
     std::string nn_name = nn_type + "-" + time_type;
@@ -119,10 +143,11 @@ void trainNeuralNetwork(std::string symbol, std::string nn_type, std::string tim
     
     // estratégia de treinamento
 
-    int numOfOperations = 20;
-    int numOfNN = 200;
-    int showInfoAfter = 5;
-    int currInfoTimeout = showInfoAfter;
+    int numOfOperations = 15;
+    int numOfNN = 100;
+
+    int saveCountIn = 5;
+    int saveCount = 5;
 
     UTC* currTime = startTime;
     int cicle = 0;
@@ -138,18 +163,19 @@ void trainNeuralNetwork(std::string symbol, std::string nn_type, std::string tim
 
     sleep_for(seconds(5));
 
-    while (true) {
-        auto nns = messedNeuralNetworks(nn, numOfNN);
-        std::shared_ptr<NeuralNetwork> bestNN = nullptr;
+    std::shared_ptr<NeuralNetwork> father, mother;
+    father = nn;
+    mother = father;
 
+    while (true) {
         neural_networks.clear();
 
-        for (auto nn : nns) {
-            neural_networks.push_back(NN_Trained(nn, max_score));
+        for (int i = 0; i < numOfNN; ++i) {
+            neural_networks.push_back(NN_Trained(crossOverAndMutation(father, mother), max_score));
         }
 
         // fase de testes
-        
+
         for (int i = 0; i < numOfOperations; ++i) {
             NNInputTrainData input;
 
@@ -185,39 +211,32 @@ void trainNeuralNetwork(std::string symbol, std::string nn_type, std::string tim
             }
             
             cicle += nextCandleOffset;
-
-            std::shared_ptr<NeuralNetwork> bestNN = neural_networks[0].nn;
-            double accuracy = neural_networks[0].accuracy();
-
-            for (auto nn_trained : neural_networks) {
-                if (nn_trained.accuracy() > accuracy) {
-                    accuracy = nn_trained.accuracy();
-                    bestNN = nn_trained.nn;
-                }
-            }
-
-            saveNeuralNetwork(nn_name, bestNN);
-            nn = bestNN;
-
-            //
-
-            currInfoTimeout++;
-
-            if (currInfoTimeout >= showInfoAfter) {
-                currInfoTimeout = 0;
-
-                system("cls");
-
-                std::cout << "Tipo de rede neural: " << nn_type << " " << time_type << "\n";
-                std::cout << "Par de treinamento: " << symbol << "\n";
-                std::cout << "Dia atual: "  << (currTime->print()) << "\n\n";
-                std::cout << "Best Neural-Network accuracy: " << accuracy * 100 << "%" << "\n";
-                std::cout << "General Accuracy (" << numOfNN << " nn's): " << getGeneralAccuracy(neural_networks) * 100 << "%";
-            }
         }
+
+        findBestNeuralNetworks(neural_networks);
+            
+        father = neural_networks[0].nn;
+        mother = neural_networks[1].nn;
+
+        saveCount--;
+
+        if (saveCount == 0) {
+            saveNeuralNetwork(nn_name, father);
+            saveCount = saveCountIn;
+        }
+
+        //
+
+        system("cls");
+
+        std::cout << "Tipo de rede neural: " << nn_type << " " << time_type << "\n";
+        std::cout << "Par de treinamento: " << symbol << "\n";
+        std::cout << "Dia atual: "  << (currTime->print()) << "\n\n";
+        std::cout << "Best Neural-Network accuracy: " << neural_networks[0].accuracy() * 100 << "%" << ", " << neural_networks[1].accuracy() * 100 << "%" << "\n";
+        std::cout << "General Accuracy (" << numOfNN << " nn's): " << getGeneralAccuracy(neural_networks) * 100 << "%";
     }
 
-    saveNeuralNetwork(nn_name, nn);
+    saveNeuralNetwork(nn_name, father);
 }
 
 int main(int argc, char** argv) {
@@ -227,7 +246,7 @@ int main(int argc, char** argv) {
 
     */
 
-    std::cout << "Iniciando treinamento..." << "\n";
+    std::cout << "Iniciando treinamento de rede neural..." << "\n";
 
     binance::init();
 

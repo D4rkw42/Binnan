@@ -20,7 +20,7 @@
         "regular": {
             "input": 38,
             "output": 1,
-            "hidden-layers": 4,
+            "hidden-layers": 2,
             
             "types": {
                 "short": {"candle-time": "_3M", "operation-time": 9},
@@ -30,7 +30,7 @@
         "future": {
             "input": 38,
             "output": 2,
-            "hidden-layers": 8
+            "hidden-layers": 4
         }
     }
 }

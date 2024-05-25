@@ -16,6 +16,7 @@ Neuron::Neuron(int _weights) {
   bias = random::get<double>(-MAX_RANDOM_BIAS, MAX_RANDOM_BIAS);
 
   for (int w = 0; w < _weights; ++w) {
+    // weights.push_back(random::get<double>(0, MAX_RANDOM_WEIGHT));
     weights.push_back(random::get<double>(-MAX_RANDOM_WEIGHT, MAX_RANDOM_WEIGHT));
   }
 }
@@ -41,8 +42,8 @@ NeuralNetwork::NeuralNetwork(std::string _type, int _input_nr, int _output_nr, i
 
   //
   
-  int hiddenLayer_nr_amount = (_input_nr + _output_nr) / 2;
-  int nr_perLayer = hiddenLayer_nr_amount / _hidden_layers;
+  int hiddenLayer_nr_amount = (_input_nr + _output_nr) * 2.f / 3;
+  int nr_perLayer = hiddenLayer_nr_amount;
 
   nr_perLayer = (nr_perLayer > 0)? nr_perLayer : 1;
 

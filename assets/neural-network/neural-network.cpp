@@ -6,8 +6,8 @@
 
 #include "assets/maths.hpp"
 
-const int BIAS_VARIATION = 10;
-const int WEIGHT_VARIATION = 10;
+const int BIAS_VARIATION = 3;
+const int WEIGHT_VARIATION = 3;
 
 //
 
@@ -185,12 +185,20 @@ void saveNeuralNetwork(std::string nn_name, std::shared_ptr<NeuralNetwork> neura
 void messNeuralNetwork(std::shared_ptr<NeuralNetwork> nn) {
   for (int layer = 0; layer < nn->layers.size(); ++layer) {
     for (int neuron = 0; neuron < nn->layers[layer].size(); ++neuron) {
+      if (!random::get<bool>(0.3)) {
+        continue;
+      }
+
       double bias_mod = random::get<double>(-BIAS_VARIATION, BIAS_VARIATION);
       nn->layers[layer][neuron].bias += bias_mod;
       
       for (int weight = 0; weight < nn->layers[layer][neuron].weights.size(); ++weight) {
         double weight_mod = random::get<double>(-WEIGHT_VARIATION, WEIGHT_VARIATION);
         nn->layers[layer][neuron].weights[weight] += weight_mod;
+
+        // if (nn->layers[layer][neuron].weights[weight] < 0) {
+        //   nn->layers[layer][neuron].weights[weight] = 0;
+        // }
       }
     }
   }
