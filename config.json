@@ -14,23 +14,5 @@
             "api-key": "Gu4shcwbHqmUtzTJgrbkdcusMtBWpeYA7TN45Sw8y6xS4nANnNd3KmKMHEviDICn",
             "secret-key": "dIYDAPIQVfy5KBuqszGon7OGbTRROsUuniCBtZa1FKNYv3GYJH2XD8xDvPGFYePF"
         }
-    },
-
-    "nn": {
-        "regular": {
-            "input": 25,
-            "output": 1,
-            "hidden-layers": 2,
-            
-            "types": {
-                "short": {"candle-time": "_3M", "operation-time": 9},
-                "long": {"candle-time": "_30M", "operation-time": 60}
-            }
-        },
-        "future": {
-            "input": 25,
-            "output": 2,
-            "hidden-layers": 4
-        }
     }
 }

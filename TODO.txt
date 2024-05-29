@@ -1,0 +1,4 @@
+usar um tipo de rede neural específico para operações com ativos
+mudar estratégia de pontuação para evitar overfitting
+usar estratégia contra overfitting conhecida
+muda estrutura de dados para um código mais rápido (talvez)

@@ -4,6 +4,15 @@
 
 #include <iostream>
 
+//
+
+CustomException::CustomException(const char* err_message) throw() : err_message(err_message), std::exception() {};
+const char* CustomException::what(void) const throw() {
+    return this->err_message;
+}
+
+//
+
 UTC::UTC(int day, int month, int year) : day(day), month(month), year(year) {
     this->value = stod(std::to_string(year) + std::to_string(month) + std::to_string(day));
 }

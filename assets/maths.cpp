@@ -5,26 +5,22 @@
 #include <cstdlib>
 #include <cmath>
 
-const double LEAKY_RELU_CONSTANT = 100;
+// const double LEAKY_RELU_CONSTANT = 100000;
 
 //
 
-void ReLu(std::vector<double>& values) {
-  for (double& value : values) {
-    value = (value > 0)? value : 0;
-  }
+// void ReLu(std::vector<double>& values) {
+//   for (double& value : values) {
+//     value = (value > 0)? value : 0;
+//   }
+// }
+
+double ReLu(double value) {
+  return (value > 0)? value : 0;
 }
 
-void LeakyReLu(std::vector<double>& values) {
-  for (int i = 0; i < values.size(); ++i) {
-    values[i] = (values[i] > 0)? values[i] : values[i] / LEAKY_RELU_CONSTANT;
-  }
-}
-
-void sigmoid(std::vector<double>& values) {
-  for (int i = 0; i < values.size(); ++i) {
-    values[i] = 1.f / (1 + exp(-values[i]));
-  }
+double sigmoid(double value) {
+  return 1.f / (1 + exp(-value));
 }
 
 // for input

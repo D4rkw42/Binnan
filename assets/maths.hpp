@@ -12,16 +12,13 @@ using random = effolkronium::random_static;
 
 //
 
-extern const double LEAKY_RELU_CONSTANT;
-
+// extern const double LEAKY_RELU_CONSTANT;
 
 //
 
-void ReLu(std::vector<double>& values);
-
-void LeakyReLu(std::vector<double>& values);
-
-void sigmoid(std::vector<double>& values);
+// void ReLu(std::vector<double>& values);
+double ReLu(double value);
+double sigmoid(double value);
 
 // for input
 
